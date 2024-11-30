@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Друга сторінка - Tabs</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        .block1, .block6 {
+            position: fixed;
+            width: 100vw;
+            height: 150px;
+            background: #c7d9f1;
+            border-bottom: solid 1px black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+        .block1 {
+            top: 0;
+        }
+        .block6 {
+            bottom: 0;
+            border-top: solid 1px black;
+        }
+        .block3 {
+            position: relative;
+            width: calc(100vw - 540px);
+            height: calc(100vh - 360px);
+            background: white;
+            margin-top: 150px;
+            left: 270px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .block2 {
+            position: fixed;
+            top: 150px;
+            left: 0;
+            width: 270px;
+            height: calc(100vh - 300px);
+            background: #f4e5d4;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .block4, .block5 {
+            position: fixed;
+            width: 270px;
+            height: calc(50% - 150px);
+            left: calc(100vw - 270px);
+            background: #d1f7e0;
+            border-left: solid 1px black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .block4 {
+            top: 150px;
+        }
+        .block5 {
+            bottom: 150px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container input,
+        .form-container button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        .tabs-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .tab-header {
+            display: flex;
+            gap: 10px;
+        }
+        .tab-header button {
+            padding: 10px;
+            border: none;
+            background-color: #e0f5d1;
+            cursor: pointer;
+        }
+        .tab-header button.active {
+            background-color: #4caf50;
+            color: white;
+        }
+        .tab-content {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<body>
+<div class="block1">
+    <h1>Відображення Tabs</h1>
+</div>
+
+<div class="block2">
+    <p>Це боковий блок (ліворуч).</p>
+</div>
+
+<div class="block3">
+    <div class="tabs-container" id="tabsContainer">
+        <div class="tab-header" id="tabHeader"></div>
+        <div class="tab-body" id="tabBody"></div>
+    </div>
+</div>
+
+<div class="block4">
+    <p>Це верхній правий блок.</p>
+</div>
+
+<div class="block5">
+    <p>Це нижній правий блок.</p>
+</div>
+
+<div class="block6">
+    <p>Це друга сторінка</p>
+</div>
+
+<script>
+    const tabHeader = document.getElementById('tabHeader');
+    const tabBody = document.getElementById('tabBody');
+
+    // Завантажити вкладки з сервера
+    async function loadTabs() {
+        try {
+            const response = await fetch('/tabs.json');
+            const tabs = await response.json();
+
+            tabs.forEach((tab, index) => {
+                // Додати кнопку вкладки
+                const tabButton = document.createElement('button');
+                tabButton.textContent = tab.title;
+                tabButton.classList.add('tab-btn');
+                tabButton.addEventListener('click', () => activateTab(index));
+                tabHeader.appendChild(tabButton);
+
+                // Додати вміст вкладки
+                const tabContent = document.createElement('div');
+                tabContent.textContent = tab.content;
+                tabContent.classList.add('tab-content');
+                tabBody.appendChild(tabContent);
+            });
+
+            // Активувати першу вкладку
+            activateTab(0);
+        } catch (error) {
+            console.error('Помилка завантаження вкладок:', error);
+        }
+    }
+
+    // Активувати вкладку
+    function activateTab(index) {
+        const buttons = tabHeader.querySelectorAll('button');
+        const contents = tabBody.querySelectorAll('.tab-content');
+
+        buttons.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        contents.forEach((content, i) => {
+            content.classList.toggle('active', i === index);
+        });
+    }
+
+    // Завантажити вкладки при відкритті сторінки
+    loadTabs();
+</script>
+</body>
+
+</body>
+</html>
