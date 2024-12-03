@@ -45,33 +45,35 @@
             box-sizing: border-box;
             overflow-y: auto;
         }
-        .block2 {
+        .block2, .block4 {
             position: fixed;
             top: 150px;
-            left: 0;
             width: 270px;
             height: calc(100vh - 300px);
             background: #f4e5d4;
             padding: 10px;
             box-sizing: border-box;
         }
-        .block4, .block5 {
-            position: fixed;
-            width: 270px;
-            height: calc(50% - 150px);
-            left: calc(100vw - 270px);
-            background: #d1f7e0;
+        .block2 {
+            left: 0;
+        }
+        .block4 {
+            right: 0;
             border-left: solid 1px black;
+        }
+        .block5 {
+            position: fixed;
+            bottom: 150px; /* Розташувати над нижнім блоком */
+            left: 270px;
+            width: calc(100vw - 540px);
+            height: 100px;
+            background: #d1f7e0;
+            border-top: solid 1px black;
             display: flex;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-        }
-        .block4 {
-            top: 150px;
-        }
-        .block5 {
-            bottom: 150px;
+            z-index: 10; /* Забезпечує, що блок видно над контентом */
         }
         .form-container {
             margin-bottom: 20px;
@@ -188,6 +190,31 @@
             content.classList.toggle('active', i === index);
         });
     }
+    async function loadTabs() {
+        try {
+            const response = await fetch('/load');
+            const data = await response.json();
+            tabHeader.innerHTML = '';
+            tabBody.innerHTML = '';
+            data.forEach((tab, index) => {
+                const tabButton = document.createElement('button');
+                tabButton.textContent = tab.title;
+                tabButton.addEventListener('click', () => activateTab(index));
+                tabHeader.appendChild(tabButton);
+
+                const tabContent = document.createElement('div');
+                tabContent.textContent = tab.content;
+                tabContent.classList.add('tab-content');
+                tabBody.appendChild(tabContent);
+            });
+            activateTab(0);
+        } catch (error) {
+            console.error('Load error:', error);
+        }
+    }
+
+    // Періодичне оновлення
+    setInterval(loadTabs, 5000);
 
     // Завантажити вкладки при відкритті сторінки
     loadTabs();

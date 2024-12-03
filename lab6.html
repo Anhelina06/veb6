@@ -123,7 +123,7 @@
 </div>
 
 <div class="block2">
-    <button id="goToSecondPageBtn">Перейти на другу сторінку</button>
+    <button id="lab6.1.html">Перейти на другу сторінку</button>
 </div>
 
 <div class="block3">
@@ -168,6 +168,19 @@
     const goToSecondPageBtn = document.getElementById('goToSecondPageBtn');
 
     let tabs = []; // Масив для збереження вкладок
+    saveTabsBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(tabs),
+            });
+            const result = await response.json();
+            alert(result.message || 'Data saved!');
+        } catch (error) {
+            console.error('Save error:', error);
+        }
+    });
 
     // Інші функції...
 </script>
